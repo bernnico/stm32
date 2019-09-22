@@ -43,7 +43,6 @@
 
 /* Private variables ---------------------------------------------------------*/
 RTC_HandleTypeDef hrtc;
-
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
@@ -99,56 +98,27 @@ int main(void)
   RTC_TimeTypeDef sTime = {0};
   RTC_DateTypeDef sDate = {0};
   uint8_t timeReg[16] = {0};
-
-//  timeReg[0] = (RTC->TR >> 20) & 0x03;
-//  timeReg[1] = (RTC->TR >> 16) & 0x0F;
-//  timeReg[2] = (RTC->TR >> 12) & 0x07;
-//  timeReg[3] = (RTC->TR >>  8) & 0x0F;
-//  timeReg[4] = (RTC->TR >>  4) & 0x07;
-//  timeReg[5] = (RTC->TR >>  0) & 0x0F;
-//
-//  if (timeReg[0] == 0) {
-//	  HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BCD);
-//	  HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BCD);
-//	  timeReg[8] = sTime.Hours;
-//	  timeReg[9] = sTime.Minutes;
-//	  timeReg[10] = sTime.Seconds;
-//  }
-//
-//  HAL_UART_Transmit(&huart2, timeReg, 16, 100);
-//  HAL_Delay(1000);
-//
-//  if (cnt == 20) {
-//	  HAL_PWR_EnterSTOPMode(PWR_MAINREGULATOR_ON, PWR_STOPENTRY_WFI);
-//  }
-
   uint32_t cnt = 0;
-  /* USER CODE END 2 */
 
   for (int i = 0; i < 10; i++) {
+	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
 	  HAL_Delay(1000);
   }
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, RESET);
+  /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
     /* USER CODE END WHILE */
-	  if (cnt == 20) {
-//		  SysTick->CTRL = 0;
-//		  HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_SLEEPENTRY_WFI);
-//
-//		  HAL_Init();
-//		  SystemClock_Config();
-	  }
-	  timeReg[15] = cnt++;
-
 	  timeReg[0] = (RTC->TR >> 20) & 0x03;
 	  timeReg[1] = (RTC->TR >> 16) & 0x0F;
 	  timeReg[2] = (RTC->TR >> 12) & 0x07;
 	  timeReg[3] = (RTC->TR >>  8) & 0x0F;
 	  timeReg[4] = (RTC->TR >>  4) & 0x07;
 	  timeReg[5] = (RTC->TR >>  0) & 0x0F;
+	  timeReg[15] = cnt++;
 
 //	  if (timeReg[0] == 0) {
 //		  HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BCD);
@@ -166,8 +136,7 @@ int main(void)
 //	  HAL_Init();
 	  SystemClock_Config();
 
-	  HAL_Delay(10);
-
+//	  HAL_Delay(10);
 
     /* USER CODE BEGIN 3 */
   }
@@ -371,7 +340,7 @@ void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
   /* NOTE : This function should not be modified, when the callback is needed,
             the HAL_RTC_AlarmAEventCallback could be implemented in the user file
    */
-  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
+//  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
 
 
 }
