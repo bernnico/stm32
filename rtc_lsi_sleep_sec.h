@@ -100,6 +100,9 @@ int main(void)
   uint8_t timeReg[16] = {0};
   uint32_t cnt = 0;
 
+  // nach dem RTC Init löst Alarm A periodisch (eine Sekunde) ein Interrupt, das MCU aus dem Sleep Mode wecken soll
+
+  // 10 sec warten
   for (int i = 0; i < 10; i++) {
 	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
 	  HAL_Delay(1000);
@@ -112,11 +115,11 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	  timeReg[0] = (RTC->TR >> 20) & 0x03;
+	  timeReg[0] = (RTC->TR >> 20) & 0x03; // Stunden
 	  timeReg[1] = (RTC->TR >> 16) & 0x0F;
-	  timeReg[2] = (RTC->TR >> 12) & 0x07;
+	  timeReg[2] = (RTC->TR >> 12) & 0x07; // Minuten
 	  timeReg[3] = (RTC->TR >>  8) & 0x0F;
-	  timeReg[4] = (RTC->TR >>  4) & 0x07;
+	  timeReg[4] = (RTC->TR >>  4) & 0x07; // Sekunden
 	  timeReg[5] = (RTC->TR >>  0) & 0x0F;
 	  timeReg[15] = cnt++;
 
@@ -128,15 +131,12 @@ int main(void)
 //		  timeReg[10] = sTime.Seconds;
 //	  }
 
-	  HAL_UART_Transmit(&huart2, timeReg, 16, 100);
+	  HAL_UART_Transmit(&huart2, timeReg, 16, 100); // als hex
 
-	  SysTick->CTRL = 0;
-	  HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+	  SysTick->CTRL = 0; // Systick aus
+	  HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_SLEEPENTRY_WFI); // stop mode
 
-//	  HAL_Init();
-	  SystemClock_Config();
-
-//	  HAL_Delay(10);
+	  SystemClock_Config(); // init System Clock neu und starte Systick
 
     /* USER CODE BEGIN 3 */
   }
