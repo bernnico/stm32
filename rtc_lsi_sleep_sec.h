@@ -100,7 +100,7 @@ int main(void)
   uint8_t timeReg[16] = {0};
   uint32_t cnt = 0;
 
-  // nach dem RTC Init löst Alarm A periodisch (eine Sekunde) ein Interrupt, das MCU aus dem Sleep Mode wecken soll
+  // nach dem RTC Init löst Alarm A periodisch (eine Sekunde) ein Interrupt aus, das MCU aus dem Sleep Mode wecken soll
 
   // 10 sec warten
   for (int i = 0; i < 10; i++) {
